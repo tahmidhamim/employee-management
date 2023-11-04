@@ -57,7 +57,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
             "e.lastUpdatedAt = :lastUpdatedAt, " +
             "e.versionNumber = :versionNumber " +
             "where e.employeeId = :employeeId " +
-            "and e.versionNumber = :versionNumber - 1")
+            "and e.versionNumber = :versionNumber - 1L")
     void updateEmployee(
             @Param("employeeId") String employeeId,
             @Param("name") String name,
@@ -94,7 +94,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
             "e.versionNumber = :versionNumber " +
             "where e.employeeId = :employeeId " +
             "and e.isDeleted = false " +
-            "and e.versionNumber = :versionNumber - 1")
+            "and e.versionNumber = :versionNumber - 1L")
     void updateEmployeeById(
             @Param("employeeId") String employeeId,
             @Param("name") String name,
@@ -120,7 +120,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
             "e.versionNumber = :versionNumber " +
             "where e.employeeId = :employeeId " +
             "and e.isDeleted = false " +
-            "and e.versionNumber = :versionNumber - 1")
+            "and e.versionNumber = :versionNumber - 1L")
     void deleteEmployeeById(
             @Param("employeeId") String employeeId,
             @Param("lastUpdatedAt") Instant lastUpdatedAt,
