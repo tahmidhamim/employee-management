@@ -21,7 +21,6 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
     @Query("select e from Employee e where e.employeeId = :id and e.isDeleted = false")
     Optional<Employee> findEmployeeById(@Param("id") String id);
 
-    @Transactional
     @Lock(LockModeType.PESSIMISTIC_READ)
     @Query("select e from Employee e where e.employeeId = :id and e.isDeleted = false")
     Optional<Employee> lockAndFindEmployeeById(@Param("id") String id);
