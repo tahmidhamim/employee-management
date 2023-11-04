@@ -122,6 +122,9 @@ public class EmployeeInfo {
     }
 
     public void setPhone(String phone) {
+        if (phone != null && phone.isBlank()) {
+            phone = null;
+        }
         this.phone = phone;
     }
 
@@ -130,6 +133,9 @@ public class EmployeeInfo {
     }
 
     public void setAddress(String address) {
+        if (address != null && address.isBlank()) {
+            address = null;
+        }
         this.address = address;
     }
 
