@@ -5,9 +5,9 @@ import com.techlearn.employeemanagement.dto.CreateEmployeeRequest;
 import com.techlearn.employeemanagement.dto.EmployeeResponse;
 import com.techlearn.employeemanagement.dto.UpdateEmployeeRequest;
 import com.techlearn.employeemanagement.exception.ServiceException;
-import com.techlearn.employeemanagement.info.CreateEmployeeInfo;
-import com.techlearn.employeemanagement.info.EmployeeInfo;
-import com.techlearn.employeemanagement.info.UpdateEmployeeInfo;
+import com.techlearn.employeemanagement.model.CreateEmployeeModel;
+import com.techlearn.employeemanagement.model.EmployeeModel;
+import com.techlearn.employeemanagement.model.UpdateEmployeeModel;
 import com.techlearn.employeemanagement.service.EmployeeService;
 import com.techlearn.employeemanagement.util.Converter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,7 @@ public class EmployeeControllerImpl implements EmployeeController {
     @PostMapping
     public ResponseEntity<?> createEmployee(@RequestBody CreateEmployeeRequest request) {
         try {
-            CreateEmployeeInfo createInfo = new CreateEmployeeInfo(
+            CreateEmployeeModel createModel = new CreateEmployeeModel(
                     request.getName(),
                     request.getEmail(),
                     request.getPhone(),
@@ -44,7 +44,7 @@ public class EmployeeControllerImpl implements EmployeeController {
                     Converter.toInstant(request.getDateOfBirth()),
                     Converter.toInstant(request.getJoinedAt())
             );
-            EmployeeInfo savedInfo = employeeService.saveEmployee(createInfo);
+            EmployeeModel savedInfo = employeeService.saveEmployee(createModel);
             EmployeeResponse response = new EmployeeResponse(savedInfo);
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (ServiceException e) {
@@ -58,8 +58,8 @@ public class EmployeeControllerImpl implements EmployeeController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getEmployeeById(@PathVariable String id) {
         try {
-            EmployeeInfo info = employeeService.getEmployeeById(id);
-            EmployeeResponse response = new EmployeeResponse(info);
+            EmployeeModel model = employeeService.getEmployeeById(id);
+            EmployeeResponse response = new EmployeeResponse(model);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (ServiceException e) {
             return new ResponseEntity<>(e.getMessage(), e.getStatus());
@@ -75,13 +75,13 @@ public class EmployeeControllerImpl implements EmployeeController {
             @RequestParam(defaultValue = "10") int size
     ) {
         try {
-            Page<EmployeeInfo> infoPage = employeeService.getEmployeeList(page, size);
+            Page<EmployeeModel> modelPage = employeeService.getEmployeeList(page, size);
 
-            List<EmployeeResponse> employeeList = infoPage.getContent().stream()
+            List<EmployeeResponse> employeeList = modelPage.getContent().stream()
                     .map(EmployeeResponse::new)
                     .collect(Collectors.toList());
 
-            Page<EmployeeResponse> responsePage = new PageImpl<>(employeeList, infoPage.getPageable(), infoPage.getTotalElements());
+            Page<EmployeeResponse> responsePage = new PageImpl<>(employeeList, modelPage.getPageable(), modelPage.getTotalElements());
             return new ResponseEntity<>(responsePage, HttpStatus.OK);
         } catch (ServiceException e) {
             return new ResponseEntity<>(e.getMessage(), e.getStatus());
@@ -97,7 +97,7 @@ public class EmployeeControllerImpl implements EmployeeController {
             @RequestBody UpdateEmployeeRequest request
     ) {
         try {
-            UpdateEmployeeInfo info = new UpdateEmployeeInfo(
+            UpdateEmployeeModel model = new UpdateEmployeeModel(
                     request.getName(),
                     request.getEmail(),
                     request.getPhone(),
@@ -111,7 +111,7 @@ public class EmployeeControllerImpl implements EmployeeController {
                     Converter.toInstant(request.getDateOfBirth()),
                     Converter.toInstant(request.getJoinedAt())
             );
-            EmployeeInfo updatedInfo = employeeService.updateEmployee(id, info);
+            EmployeeModel updatedInfo = employeeService.updateEmployee(id, model);
             EmployeeResponse response = new EmployeeResponse(updatedInfo);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (ServiceException e) {

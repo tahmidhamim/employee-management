@@ -1,10 +1,10 @@
-package com.techlearn.employeemanagement.info;
+package com.techlearn.employeemanagement.model;
 
 import com.techlearn.employeemanagement.constant.Designation;
 
 import java.time.Instant;
 
-public class UpdateEmployeeInfo {
+public class CreateEmployeeModel {
     private String name;
     private String email;
     private String phone;
@@ -13,12 +13,12 @@ public class UpdateEmployeeInfo {
     private String bankAccount;
     private String bankName;
     private Designation designation;
-    private Integer salary;
+    private int salary;
     private String managerId;
     private Instant dateOfBirth;
     private Instant joinedAt;
 
-    public UpdateEmployeeInfo(
+    public CreateEmployeeModel(
             String name,
             String email,
             String phone,
@@ -27,7 +27,7 @@ public class UpdateEmployeeInfo {
             String bankAccount,
             String bankName,
             Designation designation,
-            Integer salary,
+            int salary,
             String managerId,
             Instant dateOfBirth,
             Instant joinedAt
@@ -110,11 +110,11 @@ public class UpdateEmployeeInfo {
         this.designation = designation;
     }
 
-    public Integer getSalary() {
+    public int getSalary() {
         return salary;
     }
 
-    public void setSalary(Integer salary) {
+    public void setSalary(int salary) {
         this.salary = salary;
     }
 

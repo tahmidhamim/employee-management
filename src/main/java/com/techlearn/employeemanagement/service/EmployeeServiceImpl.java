@@ -6,9 +6,9 @@ import com.techlearn.employeemanagement.exception.BadRequestException;
 import com.techlearn.employeemanagement.exception.ConflictException;
 import com.techlearn.employeemanagement.exception.NotFoundException;
 import com.techlearn.employeemanagement.exception.ServiceException;
-import com.techlearn.employeemanagement.info.CreateEmployeeInfo;
-import com.techlearn.employeemanagement.info.EmployeeInfo;
-import com.techlearn.employeemanagement.info.UpdateEmployeeInfo;
+import com.techlearn.employeemanagement.model.CreateEmployeeModel;
+import com.techlearn.employeemanagement.model.EmployeeModel;
+import com.techlearn.employeemanagement.model.UpdateEmployeeModel;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -28,10 +28,10 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Autowired
     private EmployeeRepository employeeRepository;
 
-    private Employee checkExistence(EmployeeInfo info) throws ConflictException {
+    private Employee checkExistence(EmployeeModel model) throws ConflictException {
         Optional<Employee> employee;
-        if (info.getNid() != null) {
-            employee = employeeRepository.findByNid(info.getNid());
+        if (model.getNid() != null) {
+            employee = employeeRepository.findByNid(model.getNid());
             if (employee.isPresent()) {
                 if (employee.get().getDeleted()) {
                     return employee.get();
@@ -40,7 +40,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                 }
             }
         }
-        employee = employeeRepository.findByEmail(info.getEmail());
+        employee = employeeRepository.findByEmail(model.getEmail());
         if (employee.isPresent()) {
             if (employee.get().getDeleted()) {
                 return employee.get();
@@ -48,8 +48,8 @@ public class EmployeeServiceImpl implements EmployeeService {
                 throw new ConflictException("Email already exists!");
             }
         }
-        if (info.getPhone() != null) {
-            employee = employeeRepository.findByPhone(info.getPhone());
+        if (model.getPhone() != null) {
+            employee = employeeRepository.findByPhone(model.getPhone());
             if (employee.isPresent()) {
                 if (employee.get().getDeleted()) {
                     return employee.get();
@@ -63,21 +63,21 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     @Transactional
-    public EmployeeInfo saveEmployee(CreateEmployeeInfo info) throws ServiceException {
+    public EmployeeModel saveEmployee(CreateEmployeeModel model) throws ServiceException {
         try {
-            EmployeeInfo employee = new EmployeeInfo(
-                    info.getName(),
-                    info.getEmail(),
-                    info.getPhone(),
-                    info.getAddress(),
-                    info.getNid(),
-                    info.getBankAccount(),
-                    info.getBankName(),
-                    info.getDesignation(),
-                    info.getSalary(),
-                    info.getManagerId(),
-                    info.getDateOfBirth(),
-                    info.getJoinedAt()
+            EmployeeModel employee = new EmployeeModel(
+                    model.getName(),
+                    model.getEmail(),
+                    model.getPhone(),
+                    model.getAddress(),
+                    model.getNid(),
+                    model.getBankAccount(),
+                    model.getBankName(),
+                    model.getDesignation(),
+                    model.getSalary(),
+                    model.getManagerId(),
+                    model.getDateOfBirth(),
+                    model.getJoinedAt()
             );
             Employee existingEmployee = checkExistence(employee);
             employee.setEmployeeInfo(existingEmployee);
@@ -102,7 +102,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                 return employee;
             } else {
                 Employee entity = employeeRepository.save(employee.toEntity());
-                return new EmployeeInfo(entity);
+                return new EmployeeModel(entity);
             }
         } catch (ServiceException e) {
             throw e;
@@ -112,11 +112,11 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public EmployeeInfo getEmployeeById(String id) throws ServiceException {
+    public EmployeeModel getEmployeeById(String id) throws ServiceException {
         try {
             Employee entity = employeeRepository.findEmployeeById(id)
                     .orElseThrow(() -> new NotFoundException("No employee found with ID: " + id));
-            return new EmployeeInfo(entity);
+            return new EmployeeModel(entity);
         } catch (ServiceException e) {
             throw e;
         } catch (Exception e) {
@@ -125,7 +125,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Page<EmployeeInfo> getEmployeeList(int page, int size) throws ServiceException {
+    public Page<EmployeeModel> getEmployeeList(int page, int size) throws ServiceException {
         try {
             if (page < 0 || size < 0) {
                 throw new BadRequestException("Page number or size cannot be less than 0");
@@ -137,10 +137,10 @@ public class EmployeeServiceImpl implements EmployeeService {
             Pageable pageable = PageRequest.of(page, size);
             Page<Employee> entityPage = employeeRepository.findEmployeeList(pageable);
 
-            List<EmployeeInfo> employeeList = entityPage.getContent().stream()
+            List<EmployeeModel> employeeList = entityPage.getContent().stream()
                     .map(entity -> {
                         try {
-                            return new EmployeeInfo(entity);
+                            return new EmployeeModel(entity);
                         } catch (BadRequestException e) {
                             throw new RuntimeException(e);
                         }
@@ -157,24 +157,24 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     @Transactional
-    public EmployeeInfo updateEmployee(String id, UpdateEmployeeInfo info) throws ServiceException {
+    public EmployeeModel updateEmployee(String id, UpdateEmployeeModel model) throws ServiceException {
         try {
             Employee existingEmployee = employeeRepository.lockAndFindEmployeeById(id)
                     .orElseThrow(() -> new NotFoundException("No employee found with ID: " + id));
 
-            EmployeeInfo employee = new EmployeeInfo(existingEmployee);
-            employee.setName(info.getName() != null ? info.getName() : employee.getName());
-            employee.setEmail(info.getEmail() != null ? info.getEmail() : employee.getEmail());
-            employee.setPhone(info.getPhone() != null ? info.getPhone() : employee.getPhone());
-            employee.setAddress(info.getAddress() != null ? info.getAddress() : employee.getAddress());
-            employee.setNid(info.getNid() != null ? info.getNid() : employee.getNid());
-            employee.setBankAccount(info.getBankAccount() != null ? info.getBankAccount() : employee.getBankAccount());
-            employee.setBankName(info.getBankName() != null ? info.getBankName() : employee.getBankName());
-            employee.setDesignation(info.getDesignation() != null ? info.getDesignation() : employee.getDesignation());
-            employee.setSalary(info.getSalary() != null ? info.getSalary() : employee.getSalary());
-            employee.setManagerId(info.getManagerId() != null ? info.getManagerId() : employee.getManagerId());
-            employee.setDateOfBirth(info.getDateOfBirth() != null ? info.getDateOfBirth() : employee.getDateOfBirth());
-            employee.setJoinedAt(info.getJoinedAt() != null ? info.getJoinedAt() : employee.getJoinedAt());
+            EmployeeModel employee = new EmployeeModel(existingEmployee);
+            employee.setName(model.getName() != null ? model.getName() : employee.getName());
+            employee.setEmail(model.getEmail() != null ? model.getEmail() : employee.getEmail());
+            employee.setPhone(model.getPhone() != null ? model.getPhone() : employee.getPhone());
+            employee.setAddress(model.getAddress() != null ? model.getAddress() : employee.getAddress());
+            employee.setNid(model.getNid() != null ? model.getNid() : employee.getNid());
+            employee.setBankAccount(model.getBankAccount() != null ? model.getBankAccount() : employee.getBankAccount());
+            employee.setBankName(model.getBankName() != null ? model.getBankName() : employee.getBankName());
+            employee.setDesignation(model.getDesignation() != null ? model.getDesignation() : employee.getDesignation());
+            employee.setSalary(model.getSalary() != null ? model.getSalary() : employee.getSalary());
+            employee.setManagerId(model.getManagerId() != null ? model.getManagerId() : employee.getManagerId());
+            employee.setDateOfBirth(model.getDateOfBirth() != null ? model.getDateOfBirth() : employee.getDateOfBirth());
+            employee.setJoinedAt(model.getJoinedAt() != null ? model.getJoinedAt() : employee.getJoinedAt());
             employee.setLastUpdatedAt(Instant.now());
             employee.setVersionNumber(existingEmployee.getVersionNumber() + 1);
 

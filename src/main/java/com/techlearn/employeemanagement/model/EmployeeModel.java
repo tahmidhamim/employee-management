@@ -1,15 +1,14 @@
-package com.techlearn.employeemanagement.info;
+package com.techlearn.employeemanagement.model;
 
 import com.techlearn.employeemanagement.constant.Designation;
 import com.techlearn.employeemanagement.entity.Employee;
 import com.techlearn.employeemanagement.exception.BadRequestException;
-import com.techlearn.employeemanagement.util.Converter;
 import com.techlearn.employeemanagement.util.Validator;
 
 import java.time.Instant;
 import java.util.UUID;
 
-public class EmployeeInfo {
+public class EmployeeModel {
     private String employeeId;
     private String name;
     private String email;
@@ -28,7 +27,7 @@ public class EmployeeInfo {
     private Instant lastUpdatedAt;
     private long versionNumber;
 
-    public EmployeeInfo(
+    public EmployeeModel(
             String name,
             String email,
             String phone,
@@ -61,7 +60,7 @@ public class EmployeeInfo {
         setVersionNumber(1);
     }
 
-    public EmployeeInfo(Employee employee) throws BadRequestException {
+    public EmployeeModel(Employee employee) throws BadRequestException {
         setEmployeeId(employee.getEmployeeId());
         setName(employee.getName());
         setEmail(employee.getEmail());

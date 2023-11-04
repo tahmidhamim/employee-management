@@ -1,6 +1,6 @@
 package com.techlearn.employeemanagement.dto;
 
-import com.techlearn.employeemanagement.info.EmployeeInfo;
+import com.techlearn.employeemanagement.model.EmployeeModel;
 import com.techlearn.employeemanagement.util.Converter;
 
 public class EmployeeResponse {
@@ -18,20 +18,20 @@ public class EmployeeResponse {
     private String dateOfBirth;
     private String joinedAt;
 
-    public EmployeeResponse(EmployeeInfo info) {
-        setEmployeeId(info.getEmployeeId());
-        setName(info.getName());
-        setEmail(info.getEmail());
-        setPhone(info.getPhone());
-        setAddress(info.getAddress());
-        setNid(info.getNid());
-        setBankAccount(info.getBankAccount());
-        setBankName(info.getBankName());
-        setDesignation(String.valueOf(info.getDesignation()));
-        setSalary(info.getSalary());
-        setManagerId(info.getManagerId());
-        setDateOfBirth(Converter.toString(info.getDateOfBirth()));
-        setJoinedAt(Converter.toString(info.getJoinedAt()));
+    public EmployeeResponse(EmployeeModel model) {
+        setEmployeeId(model.getEmployeeId());
+        setName(model.getName());
+        setEmail(model.getEmail());
+        setPhone(model.getPhone());
+        setAddress(model.getAddress());
+        setNid(model.getNid());
+        setBankAccount(model.getBankAccount());
+        setBankName(model.getBankName());
+        setDesignation(String.valueOf(model.getDesignation()));
+        setSalary(model.getSalary());
+        setManagerId(model.getManagerId());
+        setDateOfBirth(Converter.toString(model.getDateOfBirth()));
+        setJoinedAt(Converter.toString(model.getJoinedAt()));
     }
 
     public String getEmployeeId() {
