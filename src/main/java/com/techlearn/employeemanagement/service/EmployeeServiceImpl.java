@@ -127,6 +127,9 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Page<EmployeeInfo> getEmployeeList(int page, int size) throws ServiceException {
         try {
+            if (page < 0 || size < 0) {
+                throw new BadRequestException("Page number or size cannot be less than 0");
+            }
             if (size > 100) {
                 throw new BadRequestException("Page size cannot be greater than 100");
             }
