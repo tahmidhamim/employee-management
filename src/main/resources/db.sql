@@ -1,0 +1,20 @@
+create table employee (
+    employee_id varchar(50),
+    name varchar(100) not null,
+    email varchar(50) unique not null,
+    phone varchar(20) unique,
+    address varchar(200),
+    nid varchar(50) unique,
+    bank_account varchar(50) unique,
+    bank_name varchar(100),
+    designation tinyint not null,
+    salary int not null,
+    manager_id varchar(50),
+    date_of_birth timestamp,
+    joined_at timestamp not null,
+    is_deleted boolean default false,
+    created_at timestamp not null,
+    last_updated_at timestamp not null,
+    version_number bigint not null,
+    primary key (employee_id)
+);
