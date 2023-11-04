@@ -104,7 +104,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                 Employee entity = employeeRepository.save(employee.toEntity());
                 return new EmployeeInfo(entity);
             }
-        } catch (BadRequestException | ConflictException e) {
+        } catch (ServiceException e) {
             throw e;
         } catch (Exception e) {
             throw new ServiceException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
@@ -117,7 +117,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             Employee entity = employeeRepository.findEmployeeById(id)
                     .orElseThrow(() -> new NotFoundException("No employee found with ID: " + id));
             return new EmployeeInfo(entity);
-        } catch (NotFoundException e) {
+        } catch (ServiceException e) {
             throw e;
         } catch (Exception e) {
             throw new ServiceException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
@@ -145,7 +145,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                     .collect(Collectors.toList());
 
             return new PageImpl<>(employeeList, entityPage.getPageable(), entityPage.getTotalElements());
-        } catch (BadRequestException e) {
+        } catch (ServiceException e) {
             throw e;
         } catch (Exception e) {
             throw new ServiceException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
@@ -194,7 +194,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             );
 
             return employee;
-        } catch (NotFoundException | BadRequestException e) {
+        } catch (ServiceException e) {
             throw e;
         } catch (Exception e) {
             throw new ServiceException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
@@ -208,7 +208,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             Employee employee = employeeRepository.lockAndFindEmployeeById(id)
                     .orElseThrow(() -> new NotFoundException("No employee found with ID: " + id));
             employeeRepository.deleteEmployeeById(id, Instant.now(), employee.getVersionNumber() + 1L);
-        } catch (NotFoundException e) {
+        } catch (ServiceException e) {
             throw e;
         } catch (Exception e) {
             throw new ServiceException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
