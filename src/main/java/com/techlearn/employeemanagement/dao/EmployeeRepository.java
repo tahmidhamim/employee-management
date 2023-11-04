@@ -20,24 +20,24 @@ import java.util.Optional;
 public interface EmployeeRepository extends JpaRepository<Employee, String> {
     @Query("select e from Employee e where e.employeeId = :id and e.isDeleted = false")
     Optional<Employee> findEmployeeById(@Param("id") String id);
+
     @Transactional
     @Lock(LockModeType.PESSIMISTIC_READ)
     @Query("select e from Employee e where e.employeeId = :id and e.isDeleted = false")
     Optional<Employee> lockAndFindEmployeeById(@Param("id") String id);
-    @Transactional
+
     @Lock(LockModeType.PESSIMISTIC_READ)
-    @Query("select e from Employee e where e.nid = :nid")
-    Optional<Employee> lockAndFindEmployeeByNid(@Param("nid") String nid);
-    @Transactional
+    Optional<Employee> findByNid(@Param("nid") String nid);
+
     @Lock(LockModeType.PESSIMISTIC_READ)
-    @Query("select e from Employee e where e.email = :email")
-    Optional<Employee> lockAndFindEmployeeByEmail(@Param("email") String email);
-    @Transactional
+    Optional<Employee> findByEmail(@Param("email") String email);
+
     @Lock(LockModeType.PESSIMISTIC_READ)
-    @Query("select e from Employee e where e.phone = :phone")
-    Optional<Employee> lockAndFindEmployeeByPhone(@Param("phone") String phone);
+    Optional<Employee> findByPhone(@Param("phone") String phone);
+
     @Query("select e from Employee e where e.isDeleted = false order by e.name")
     Page<Employee> findEmployeeList(Pageable pageable);
+
     @Transactional
     @Modifying
     @Query("update Employee e set " +
@@ -75,6 +75,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
             @Param("lastUpdatedAt") Instant lastUpdatedAt,
             @Param("versionNumber") long versionNumber
     );
+
     @Transactional
     @Modifying
     @Query("update Employee e set " +
@@ -112,6 +113,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
             @Param("lastUpdatedAt") Instant lastUpdatedAt,
             @Param("versionNumber") long versionNumber
     );
+
     @Transactional
     @Modifying
     @Query("update Employee e set " +

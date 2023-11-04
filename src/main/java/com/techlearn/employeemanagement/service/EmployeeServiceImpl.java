@@ -28,11 +28,10 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Autowired
     private EmployeeRepository employeeRepository;
 
-    @Transactional
     private Employee checkExistence(EmployeeInfo info) throws ConflictException {
         Optional<Employee> employee;
         if (info.getNid() != null) {
-            employee = employeeRepository.lockAndFindEmployeeByNid(info.getNid());
+            employee = employeeRepository.findByNid(info.getNid());
             if (employee.isPresent()) {
                 if (employee.get().getDeleted()) {
                     return employee.get();
@@ -41,7 +40,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                 }
             }
         }
-        employee = employeeRepository.lockAndFindEmployeeByEmail(info.getEmail());
+        employee = employeeRepository.findByEmail(info.getEmail());
         if (employee.isPresent()) {
             if (employee.get().getDeleted()) {
                 return employee.get();
@@ -50,7 +49,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             }
         }
         if (info.getPhone() != null) {
-            employee = employeeRepository.lockAndFindEmployeeByPhone(info.getPhone());
+            employee = employeeRepository.findByPhone(info.getPhone());
             if (employee.isPresent()) {
                 if (employee.get().getDeleted()) {
                     return employee.get();
