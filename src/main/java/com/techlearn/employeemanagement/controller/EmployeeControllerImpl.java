@@ -1,6 +1,7 @@
 package com.techlearn.employeemanagement.controller;
 
 import com.techlearn.employeemanagement.constant.Designation;
+import com.techlearn.employeemanagement.dto.ApiError;
 import com.techlearn.employeemanagement.dto.CreateEmployeeRequest;
 import com.techlearn.employeemanagement.dto.EmployeeResponse;
 import com.techlearn.employeemanagement.dto.UpdateEmployeeRequest;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/employee")
 public class EmployeeControllerImpl implements EmployeeController {
@@ -48,9 +50,9 @@ public class EmployeeControllerImpl implements EmployeeController {
             EmployeeResponse response = new EmployeeResponse(savedInfo);
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (ServiceException e) {
-            return new ResponseEntity<>(e.getMessage(), e.getStatus());
+            return new ResponseEntity<>(new ApiError(e.getMessage()), e.getStatus());
         } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new ApiError(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -62,9 +64,9 @@ public class EmployeeControllerImpl implements EmployeeController {
             EmployeeResponse response = new EmployeeResponse(model);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (ServiceException e) {
-            return new ResponseEntity<>(e.getMessage(), e.getStatus());
+            return new ResponseEntity<>(new ApiError(e.getMessage()), e.getStatus());
         } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new ApiError(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -84,9 +86,9 @@ public class EmployeeControllerImpl implements EmployeeController {
             Page<EmployeeResponse> responsePage = new PageImpl<>(employeeList, modelPage.getPageable(), modelPage.getTotalElements());
             return new ResponseEntity<>(responsePage, HttpStatus.OK);
         } catch (ServiceException e) {
-            return new ResponseEntity<>(e.getMessage(), e.getStatus());
+            return new ResponseEntity<>(new ApiError(e.getMessage()), e.getStatus());
         } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new ApiError(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -115,9 +117,9 @@ public class EmployeeControllerImpl implements EmployeeController {
             EmployeeResponse response = new EmployeeResponse(updatedInfo);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (ServiceException e) {
-            return new ResponseEntity<>(e.getMessage(), e.getStatus());
+            return new ResponseEntity<>(new ApiError(e.getMessage()), e.getStatus());
         } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new ApiError(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -128,9 +130,9 @@ public class EmployeeControllerImpl implements EmployeeController {
             employeeService.deleteEmployeeById(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (ServiceException e) {
-            return new ResponseEntity<>(e.getMessage(), e.getStatus());
+            return new ResponseEntity<>(new ApiError(e.getMessage()), e.getStatus());
         } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new ApiError(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
