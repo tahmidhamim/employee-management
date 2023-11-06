@@ -1,9 +1,9 @@
 package com.techlearn.employeemanagement.dto;
 
-public class ApiError {
+public class ErrorResponse {
     private String message;
 
-    public ApiError(String message) {
+    public ErrorResponse(String message) {
         setMessage(message);
     }
 

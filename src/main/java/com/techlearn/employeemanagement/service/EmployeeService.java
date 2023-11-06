@@ -12,4 +12,5 @@ public interface EmployeeService {
     Page<EmployeeModel> getEmployeeList(int page, int size) throws ServiceException;
     EmployeeModel updateEmployee(String id, UpdateEmployeeModel info) throws ServiceException;
     void deleteEmployeeById(String id) throws ServiceException;
+    long countEmployees() throws ServiceException;
 }

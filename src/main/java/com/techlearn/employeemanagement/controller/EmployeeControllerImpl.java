@@ -1,10 +1,7 @@
 package com.techlearn.employeemanagement.controller;
 
 import com.techlearn.employeemanagement.constant.Designation;
-import com.techlearn.employeemanagement.dto.ApiError;
-import com.techlearn.employeemanagement.dto.CreateEmployeeRequest;
-import com.techlearn.employeemanagement.dto.EmployeeResponse;
-import com.techlearn.employeemanagement.dto.UpdateEmployeeRequest;
+import com.techlearn.employeemanagement.dto.*;
 import com.techlearn.employeemanagement.exception.ServiceException;
 import com.techlearn.employeemanagement.model.CreateEmployeeModel;
 import com.techlearn.employeemanagement.model.EmployeeModel;
@@ -50,9 +47,9 @@ public class EmployeeControllerImpl implements EmployeeController {
             EmployeeResponse response = new EmployeeResponse(savedInfo);
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (ServiceException e) {
-            return new ResponseEntity<>(new ApiError(e.getMessage()), e.getStatus());
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), e.getStatus());
         } catch (Exception e) {
-            return new ResponseEntity<>(new ApiError(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -64,9 +61,9 @@ public class EmployeeControllerImpl implements EmployeeController {
             EmployeeResponse response = new EmployeeResponse(model);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (ServiceException e) {
-            return new ResponseEntity<>(new ApiError(e.getMessage()), e.getStatus());
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), e.getStatus());
         } catch (Exception e) {
-            return new ResponseEntity<>(new ApiError(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -86,9 +83,9 @@ public class EmployeeControllerImpl implements EmployeeController {
             Page<EmployeeResponse> responsePage = new PageImpl<>(employeeList, modelPage.getPageable(), modelPage.getTotalElements());
             return new ResponseEntity<>(responsePage, HttpStatus.OK);
         } catch (ServiceException e) {
-            return new ResponseEntity<>(new ApiError(e.getMessage()), e.getStatus());
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), e.getStatus());
         } catch (Exception e) {
-            return new ResponseEntity<>(new ApiError(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -117,9 +114,9 @@ public class EmployeeControllerImpl implements EmployeeController {
             EmployeeResponse response = new EmployeeResponse(updatedInfo);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (ServiceException e) {
-            return new ResponseEntity<>(new ApiError(e.getMessage()), e.getStatus());
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), e.getStatus());
         } catch (Exception e) {
-            return new ResponseEntity<>(new ApiError(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -130,9 +127,22 @@ public class EmployeeControllerImpl implements EmployeeController {
             employeeService.deleteEmployeeById(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (ServiceException e) {
-            return new ResponseEntity<>(new ApiError(e.getMessage()), e.getStatus());
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), e.getStatus());
         } catch (Exception e) {
-            return new ResponseEntity<>(new ApiError(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Override
+    @GetMapping("/count")
+    public ResponseEntity<?> countEmployees() {
+        try {
+            long count = employeeService.countEmployees();
+            return new ResponseEntity<>(new CountResponse(count), HttpStatus.OK);
+        } catch (ServiceException e) {
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), e.getStatus());
+        } catch (Exception e) {
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

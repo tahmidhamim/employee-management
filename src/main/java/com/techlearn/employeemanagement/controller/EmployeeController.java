@@ -10,4 +10,5 @@ public interface EmployeeController {
     ResponseEntity<?> getEmployeeList(int page, int size);
     ResponseEntity<?> updateEmployeeById(String id, UpdateEmployeeRequest request);
     ResponseEntity<?> deleteEmployeeById(String id);
+    ResponseEntity<?> countEmployees();
 }

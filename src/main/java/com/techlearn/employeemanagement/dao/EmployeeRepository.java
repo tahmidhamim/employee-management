@@ -14,12 +14,14 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, String> {
-    @Query("select e from Employee e where e.employeeId = :id and e.isDeleted = false")
-    Optional<Employee> findEmployeeById(@Param("id") String id);
+    long countByIsDeletedFalse();
+
+    Optional<Employee> findByEmployeeIdAndIsDeletedFalse(@Param("employeeId") String employeeId);
 
     @Lock(LockModeType.PESSIMISTIC_READ)
     @Query("select e from Employee e where e.employeeId = :id and e.isDeleted = false")
@@ -34,8 +36,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
     @Lock(LockModeType.PESSIMISTIC_READ)
     Optional<Employee> findByPhone(@Param("phone") String phone);
 
-    @Query("select e from Employee e where e.isDeleted = false order by e.name")
-    Page<Employee> findEmployeeList(Pageable pageable);
+    Page<Employee> findByIsDeletedFalseOrderByNameAsc(Pageable pageable);
 
     @Transactional
     @Modifying

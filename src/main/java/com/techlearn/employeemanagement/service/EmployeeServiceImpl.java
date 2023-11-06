@@ -114,7 +114,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public EmployeeModel getEmployeeById(String id) throws ServiceException {
         try {
-            Employee entity = employeeRepository.findEmployeeById(id)
+            Employee entity = employeeRepository.findByEmployeeIdAndIsDeletedFalse(id)
                     .orElseThrow(() -> new NotFoundException("No employee found with ID: " + id));
             return new EmployeeModel(entity);
         } catch (ServiceException e) {
@@ -135,7 +135,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             }
 
             Pageable pageable = PageRequest.of(page, size);
-            Page<Employee> entityPage = employeeRepository.findEmployeeList(pageable);
+            Page<Employee> entityPage = employeeRepository.findByIsDeletedFalseOrderByNameAsc(pageable);
 
             List<EmployeeModel> employeeList = entityPage.getContent().stream()
                     .map(entity -> {
@@ -213,6 +213,15 @@ public class EmployeeServiceImpl implements EmployeeService {
             employeeRepository.deleteEmployeeById(id, Instant.now(), employee.getVersionNumber() + 1L);
         } catch (ServiceException e) {
             throw e;
+        } catch (Exception e) {
+            throw new ServiceException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+    }
+
+    @Override
+    public long countEmployees() throws ServiceException {
+        try {
+            return employeeRepository.countByIsDeletedFalse();
         } catch (Exception e) {
             throw new ServiceException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
